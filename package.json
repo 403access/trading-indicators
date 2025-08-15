@@ -4,7 +4,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "bun --hot src/index.tsx",
+		"dev": "bun --hot ./src/apps/backend/main.ts",
 		"start": "NODE_ENV=production bun src/index.tsx",
 		"build": "bun run build.ts",
 		"api:tradingpairs": "bun run ./src/scripts/getTradingPairs.ts",
