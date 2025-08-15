@@ -6,7 +6,12 @@
 	"scripts": {
 		"dev": "bun --hot src/index.tsx",
 		"start": "NODE_ENV=production bun src/index.tsx",
-		"build": "bun run build.ts"
+		"build": "bun run build.ts",
+		"api:tradingpairs": "bun run ./src/scripts/getTradingPairs.ts",
+		"api:tradingpairs:SOLUSDC": "bun run ./src/scripts/getTradingPairSOLUSDC.ts",
+		"api:assetinfo": "bun run ./src/scripts/getAssetInfo.ts",
+		"api:ohlcdata": "bun run ./src/scripts/getOHLCData.ts",
+		"api:tradeshistory": "bun run ./src/scripts/get-trades-history.ts"
 	},
 	"dependencies": {
 		"@radix-ui/react-label": "^2.1.7",

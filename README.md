@@ -4,6 +4,8 @@
 
 First, create an .env file based on [.env.sample](./.env.sample).
 
+Then, place historic data at [/data](/data).
+
 To install dependencies:
 
 ```bash
