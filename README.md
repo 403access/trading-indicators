@@ -1,5 +1,10 @@
 # bun-react-tailwind-shadcn-template
 
+## TODO
+
+- Add unit and integration tests
+  - test actual Kraken API calls 
+
 ## Setup
 
 First, create an .env file based on [.env.sample](./.env.sample).
