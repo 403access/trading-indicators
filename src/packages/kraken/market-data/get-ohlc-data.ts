@@ -11,7 +11,6 @@ import {
 	type KrakenResponse as Response,
 } from "@/packages/kraken/api";
 import type { NoKey } from "@/packages/type-system/keys";
-import { Environment } from "../config";
 
 /**
  * Request

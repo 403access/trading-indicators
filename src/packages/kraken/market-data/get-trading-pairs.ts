@@ -4,7 +4,10 @@
  * Documentation: https://docs.kraken.com/api/docs/rest-api/get-tradable-asset-pairs/
  */
 
-import { buildUrl, type KrakenResponse as Response } from "../api/base";
+import {
+	buildUrl,
+	type KrakenResponse as Response,
+} from "@/packages/kraken/api";
 
 /**
  * Request

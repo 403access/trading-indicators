@@ -3,7 +3,10 @@
  * Description: Get information about the assets that are available for deposit, withdrawal, trading and earn.
  * Documentation: https://docs.kraken.com/api/docs/rest-api/get-asset-info
  */
-import { buildUrl, type KrakenResponse as Response } from "../api/base";
+import {
+	buildUrl,
+	type KrakenResponse as Response,
+} from "@/packages/kraken/api";
 
 /**
  * Request

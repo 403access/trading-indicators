@@ -3,7 +3,7 @@
  * Description: Get the server's time.
  * Documentation: https://docs.kraken.com/api/docs/rest-api/get-server-time
  */
-import type { KrakenResponse as Response } from "../api/base";
+import type { KrakenResponse as Response } from "@/packages/kraken/api";
 
 export interface ServerTime {
 	/**
