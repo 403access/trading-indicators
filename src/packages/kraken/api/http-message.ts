@@ -1,5 +1,5 @@
-import { Environment } from "@/packages/kraken/config";
-import type { NoKey } from "@/packages/type-system/keys";
+import { Environment } from "#/packages/kraken/config";
+import type { NoKey } from "#/packages/type-system/keys";
 
 export type ErrorResponse = {
 	error: string[];

@@ -9,8 +9,8 @@
 import {
 	buildUrl,
 	type KrakenResponse as Response,
-} from "@/packages/kraken/api";
-import type { NoKey } from "@/packages/type-system/keys";
+} from "#/packages/kraken/api";
+import type { NoKey } from "#/packages/type-system/keys";
 
 /**
  * Request

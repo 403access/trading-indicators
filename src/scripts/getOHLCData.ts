@@ -2,7 +2,7 @@
 
 // const db = new Database("mydb.sqlite", { create: true });
 
-import { getOHLCData } from "@/packages/kraken";
+import { getOHLCData } from "#/packages/kraken";
 
 const ohlcDataResponse = await getOHLCData({
 	pair: "XBTUSD",

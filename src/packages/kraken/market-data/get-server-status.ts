@@ -3,7 +3,7 @@
  * Description: Get the current system status or trading mode.
  * Documentation: https://docs.kraken.com/api/docs/rest-api/get-system-status
  */
-import type { KrakenResponse as Response } from "@/packages/kraken/api";
+import type { KrakenResponse as Response } from "#/packages/kraken/api";
 
 export interface ServerStatus {
 	/**

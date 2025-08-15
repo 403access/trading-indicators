@@ -6,7 +6,7 @@
 import {
 	buildUrl,
 	type KrakenResponse as Response,
-} from "@/packages/kraken/api";
+} from "#/packages/kraken/api";
 
 /**
  * Request

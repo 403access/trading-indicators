@@ -1,4 +1,4 @@
-import { getTradableAssetPairs } from "@/packages/kraken";
+import { getTradableAssetPairs } from "#/packages/kraken";
 
 const tradableAssetPairsResponse = await getTradableAssetPairs({
 	pair: "SOLUSDC",

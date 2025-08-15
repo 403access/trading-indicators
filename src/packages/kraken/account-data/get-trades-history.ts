@@ -10,7 +10,7 @@ import {
 	buildUrl,
 	getKrakenSignature,
 	type KrakenResponse as Response,
-} from "@/packages/kraken/api";
+} from "#/packages/kraken/api";
 
 export type TradeType =
 	| "all"

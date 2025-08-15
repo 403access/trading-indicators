@@ -1,4 +1,4 @@
-import { getAssetInfo } from "@/packages/kraken";
+import { getAssetInfo } from "#/packages/kraken";
 
 const assetInfoResponse = await getAssetInfo();
 

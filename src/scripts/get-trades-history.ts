@@ -1,4 +1,4 @@
-import { getTradesHistory } from "@/packages/kraken";
+import { getTradesHistory } from "#/packages/kraken";
 
 const tradesHistoryResponse = await getTradesHistory({
 	nonce: Date.now(),
