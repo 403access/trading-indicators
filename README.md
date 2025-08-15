@@ -2,6 +2,8 @@
 
 ## Setup
 
+First, create an .env file based on [.env.sample](./.env.sample).
+
 To install dependencies:
 
 ```bash
