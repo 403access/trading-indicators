@@ -3,8 +3,8 @@ import { KrakenTradesHistoryApp } from "./components/KrakenTradesHistoryApp";
 import "./index.css";
 
 export function App() {
-  // return (<Card>Hello, World</Card>);
-  return <KrakenTradesHistoryApp />
+	// return (<Card>Hello, World</Card>);
+	return <KrakenTradesHistoryApp />;
 }
 
 export default App;
