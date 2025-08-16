@@ -4,6 +4,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
+		"format": "bunx biome format --write",
 		"dev": "bun --hot ./src/apps/backend/main.ts",
 		"start": "NODE_ENV=production bun src/index.tsx",
 		"build": "bun run build.ts",
