@@ -10,7 +10,7 @@ export function Header() {
             <div className="h-3 w-3 rounded-full" style={{ background: colors.yellow }} />
             <div className="h-3 w-3 rounded-full" style={{ background: colors.green }} />
             <span className="ml-2 font-semibold" style={{ color: colors.text }}>
-                Kraken — Trades History Explorer
+                Mock.Trade
             </span>
             <span className="ml-auto text-sm" style={{ color: colors.textMuted }}>
                 VS Code Dark UI
