@@ -1,3 +1,4 @@
+import logo from "#/apps/frontend/images/mock-trade-logo-1024x1024-transparent.png";
 import { colors } from "#/apps/frontend/styles/colors";
 
 export function Header() {
@@ -21,7 +22,12 @@ export function Header() {
                 className="h-3 w-3 rounded-full"
                 style={{ background: colors.green }}
             />
-            <span className="ml-2 font-semibold" style={{ color: colors.text }}>
+            <span className="ml-2 font-semibold flex gap-2 items-center" style={{ color: colors.text }}>
+                <img
+                    src={logo}
+                    alt="Mock.Trade"
+                    className="h-8 w-8"
+                />
                 Mock.Trade
             </span>
             <span className="ml-auto text-sm" style={{ color: colors.textMuted }}>
