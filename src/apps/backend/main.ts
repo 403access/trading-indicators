@@ -1,4 +1,5 @@
 import { serve } from "bun";
+import { tlsOptions as tls } from "#/apps/backend/ssl/ssl-files";
 import homepage from "#/apps/frontend/index.html";
 import { getTradesHistory } from "#/packages/kraken";
 
@@ -29,6 +30,8 @@ const server = serve({
 			},
 		},
 	},
+
+	tls,
 
 	// Enable development mode for:
 	// - Detailed error messages

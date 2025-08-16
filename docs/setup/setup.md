@@ -29,3 +29,7 @@ bun start
 ```
 
 This project was created using `bun init` in bun v1.2.20. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+
+## SSL
+
+Command to generate SSL certificates for localhost can be found at the [ssl](/docs/architecture/ssl.md) documentation.
