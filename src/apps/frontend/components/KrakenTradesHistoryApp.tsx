@@ -96,6 +96,17 @@ export function KrakenTradesHistoryApp() {
 	const page = Math.floor((query.ofs ?? 0) / pageSize) + 1;
 	const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
+	const onPrev = () => {
+		setQuery((q) => ({ ...q, ofs: Math.max(0, q.ofs - pageSize) }));
+	};
+
+	const onNext = () => {
+		setQuery((q) => ({
+			...q,
+			ofs: Math.min((totalPages - 1) * pageSize, q.ofs + pageSize),
+		}));
+	};
+
 	return (
 		<div
 			className="min-h-screen"
@@ -128,15 +139,8 @@ export function KrakenTradesHistoryApp() {
 							loading={loading}
 							page={page}
 							totalPages={totalPages}
-							onPrev={() =>
-								setQuery((q) => ({ ...q, ofs: Math.max(0, q.ofs - pageSize) }))
-							}
-							onNext={() =>
-								setQuery((q) => ({
-									...q,
-									ofs: Math.min((totalPages - 1) * pageSize, q.ofs + pageSize),
-								}))
-							}
+							onPrev={onPrev}
+							onNext={onNext}
 							onRefresh={() => setQuery((q) => ({ ...q }))}
 						/>
 						<TradesTable
