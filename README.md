@@ -9,3 +9,4 @@
 
 Table of contents
 - [Setup](./docs/setup/setup.md)
+- [Todo](./docs/todo/todos.md)
