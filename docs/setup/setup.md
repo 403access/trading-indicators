@@ -1,8 +1,14 @@
 # Setup
 
+## Environment variables
+
 First, create an .env file based on [.env.sample](./.env.sample).
 
+## Data
+
 Then, place historic data at [/data](/data).
+
+## Dependencies
 
 To install dependencies:
 
