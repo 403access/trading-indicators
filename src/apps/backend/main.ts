@@ -1,5 +1,6 @@
 import { serve } from "bun";
 import homepage from "#/apps/frontend/index.html";
+import { getTradesHistory } from "#/packages/kraken";
 
 const server = serve({
 	routes: {
@@ -11,6 +12,20 @@ const server = serve({
 		"/api/users": {
 			async GET(req) {
 				return Response.json({ users: [] });
+			},
+		},
+		"/api/trades": {
+			async GET(req) {
+				const apiKey = process.env.API_KEY;
+				const apiPrivateKey = process.env.API_PRIVATE_KEY;
+
+				if (!apiKey || !apiPrivateKey) {
+					return new Response("Unauthorized", { status: 401 });
+				}
+
+				const trades = await getTradesHistory({ nonce: Date.now() });
+
+				return Response.json(trades);
 			},
 		},
 	},
