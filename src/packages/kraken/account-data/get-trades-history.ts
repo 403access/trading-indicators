@@ -264,7 +264,6 @@ export const getTradesHistory = async (params: GetTradesHistoryRequest) => {
 	if (apiPrivateKey === undefined)
 		throw new Error("API_PRIVATE_KEY is not defined");
 
-	// const url = buildUrl(GET_TRADES_HISTORY_URL, post);
 	const url = buildUrl(GET_TRADES_HISTORY_URL);
 	console.log("URL with query:", url);
 
@@ -275,19 +274,7 @@ export const getTradesHistory = async (params: GetTradesHistoryRequest) => {
 	console.log("Request body:", body);
 
 	const apiSignature = getKrakenSignature(relativeUrl, body, apiPrivateKey);
-	// console.log("API Signature:", apiSignature);
-
-	// const apiSignature2 = getKrakenSignature(relativeUrl, post, apiPrivateKey);
-	// console.log("API Signature 2:", apiSignature2);
-
-	// const apiSignature = getSignature(
-	// 	apiPrivateKey,
-	// 	queryString + (bodyString || ""),
-	// 	nonce,
-	// 	relativeUrl,
-	// );
-
-	// throw new Error("Not implemented exception");
+	console.log("API Signature:", apiSignature);
 
 	const response = await fetch(url, {
 		method: "POST",
