@@ -7,14 +7,6 @@
 - UI framework: tailwind
 - UI components: shadcn
 
-## TODO
-
-- Add unit and integration tests
-  - test actual Kraken API calls
-- UI
-  - DateTime Picker
-    - Match theme
-
 ## Setup
 
 First, create an .env file based on [.env.sample](./.env.sample).
