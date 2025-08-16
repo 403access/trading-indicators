@@ -9,6 +9,7 @@ import { DetailsDrawer } from "./DetailsDrawer";
 import { FiltersPanel } from "./FiltersPanels";
 import { Header } from "./Header";
 import { JSONInspector } from "./JSONInspector";
+import { Overlay } from "./Overlay";
 import { SummaryBar } from "./SummaryBar";
 import { Toolbar } from "./Toolbar";
 import { TradesTable } from "./TradesTable";
@@ -155,14 +156,7 @@ export function KrakenTradesHistoryApp() {
 			/>
 
 			{/* Error toast */}
-			{error ? (
-				<div
-					className="fixed bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-lg shadow"
-					style={{ background: colors.red, color: "#000" }}
-				>
-					{error}
-				</div>
-			) : null}
+			{error && <Overlay text={error} />}
 		</div>
 	);
 }
