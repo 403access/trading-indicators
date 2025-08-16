@@ -32,9 +32,6 @@ export function Header() {
 			<span className="ml-auto text-sm" style={{ color: colors.textMuted }}>
 				VS Code Dark UI
 			</span>
-			<span className="ml-auto text-sm" style={{ color: colors.textMuted }}>
-				VS Code Dark UI
-			</span>
 		</div>
 	);
 }
