@@ -1,7 +1,12 @@
 import { serve } from "bun";
 import { tlsOptions as tls } from "#/apps/backend/ssl/ssl-files";
 import homepage from "#/apps/frontend/index.html";
-import { getTradesHistory } from "#/packages/kraken";
+import {
+	fullResyncTrades,
+	getTradesServiceInfo,
+	getTradesWithSync,
+	syncTradesFromAPI,
+} from "#/packages/trades-service";
 
 const server = serve({
 	routes: {
@@ -11,7 +16,7 @@ const server = serve({
 
 		// ** API endpoints ** (Bun v1.2.3+ required)
 		"/api/users": {
-			async GET(req) {
+			async GET(_req) {
 				return Response.json({ users: [] });
 			},
 		},
@@ -24,9 +29,112 @@ const server = serve({
 					return new Response("Unauthorized", { status: 401 });
 				}
 
-				const trades = await getTradesHistory({ nonce: Date.now() });
+				try {
+					// Parse query parameters for filtering
+					const url = new URL(req.url);
+					const offset = Number(url.searchParams.get("offset")) || 0;
+					const limit = Number(url.searchParams.get("limit")) || 50;
+					const pair = url.searchParams.get("pair") || undefined;
+					const type = url.searchParams.get("type") || undefined;
+					const forceRefresh = url.searchParams.get("refresh") === "true";
 
-				return Response.json(trades);
+					// Get trades from database with API sync
+					const trades = await getTradesWithSync({
+						offset,
+						limit,
+						pair,
+						type,
+						forceRefresh,
+					});
+
+					return Response.json({
+						error: [],
+						result: trades,
+					});
+				} catch (error) {
+					console.error("Error in /api/trades:", error);
+					return Response.json(
+						{
+							error: [error instanceof Error ? error.message : "Unknown error"],
+							result: null,
+						},
+						{ status: 500 },
+					);
+				}
+			},
+		},
+		"/api/trades/sync": {
+			async POST(_req) {
+				const apiKey = process.env.API_KEY;
+				const apiPrivateKey = process.env.API_PRIVATE_KEY;
+
+				if (!apiKey || !apiPrivateKey) {
+					return new Response("Unauthorized", { status: 401 });
+				}
+
+				try {
+					const result = await syncTradesFromAPI();
+					return Response.json({
+						error: [],
+						result,
+					});
+				} catch (error) {
+					console.error("Error in /api/trades/sync:", error);
+					return Response.json(
+						{
+							error: [error instanceof Error ? error.message : "Unknown error"],
+							result: null,
+						},
+						{ status: 500 },
+					);
+				}
+			},
+		},
+		"/api/trades/info": {
+			async GET(_req) {
+				try {
+					const info = getTradesServiceInfo();
+					return Response.json({
+						error: [],
+						result: info,
+					});
+				} catch (error) {
+					console.error("Error in /api/trades/info:", error);
+					return Response.json(
+						{
+							error: [error instanceof Error ? error.message : "Unknown error"],
+							result: null,
+						},
+						{ status: 500 },
+					);
+				}
+			},
+		},
+		"/api/trades/resync": {
+			async POST(_req) {
+				const apiKey = process.env.API_KEY;
+				const apiPrivateKey = process.env.API_PRIVATE_KEY;
+
+				if (!apiKey || !apiPrivateKey) {
+					return new Response("Unauthorized", { status: 401 });
+				}
+
+				try {
+					const result = await fullResyncTrades();
+					return Response.json({
+						error: [],
+						result,
+					});
+				} catch (error) {
+					console.error("Error in /api/trades/resync:", error);
+					return Response.json(
+						{
+							error: [error instanceof Error ? error.message : "Unknown error"],
+							result: null,
+						},
+						{ status: 500 },
+					);
+				}
 			},
 		},
 	},
@@ -39,7 +147,7 @@ const server = serve({
 	development: true,
 
 	// Prior to v1.2.3, the `fetch` option was used to handle all API requests. It is now optional.
-	async fetch(req) {
+	async fetch(_req) {
 		// Return 404 for unmatched routes
 		return new Response("Not Found", { status: 404 });
 	},
