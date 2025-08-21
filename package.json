@@ -12,7 +12,11 @@
 		"api:tradingpairs:SOLUSDC": "bun run ./src/scripts/getTradingPairSOLUSDC.ts",
 		"api:assetinfo": "bun run ./src/scripts/getAssetInfo.ts",
 		"api:ohlcdata": "bun run ./src/scripts/getOHLCData.ts",
-		"api:tradeshistory": "bun run ./src/scripts/get-trades-history.ts"
+		"api:tradeshistory": "bun run ./src/scripts/get-trades-history.ts",
+		"sync:full": "bun run ./src/scripts/kraken-sync.ts full",
+		"sync:incremental": "bun run ./src/scripts/kraken-sync.ts incremental",
+		"db:status": "bun run ./src/scripts/db-status.ts",
+		"test:ratelimit": "bun run ./src/scripts/test-rate-limiter.ts"
 	},
 	"dependencies": {
 		"@radix-ui/react-label": "^2.1.7",
