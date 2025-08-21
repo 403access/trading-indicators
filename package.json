@@ -16,7 +16,9 @@
 		"sync:full": "bun run ./src/scripts/kraken-sync.ts full",
 		"sync:incremental": "bun run ./src/scripts/kraken-sync.ts incremental",
 		"db:status": "bun run ./src/scripts/db-status.ts",
-		"test:ratelimit": "bun run ./src/scripts/test-rate-limiter.ts"
+		"test:ratelimit": "bun run ./src/scripts/test-rate-limiter.ts",
+		"test:refactor": "bun run ./src/scripts/test-refactor.ts",
+		"test:env": "bun run ./src/scripts/test-env-helpers.ts"
 	},
 	"dependencies": {
 		"@radix-ui/react-label": "^2.1.7",
