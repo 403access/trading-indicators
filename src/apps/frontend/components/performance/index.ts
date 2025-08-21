@@ -1,6 +1,9 @@
 export { KPIBar } from "./KPIBar";
+export { LiabilityDetails } from "./LiabilityDetails";
 export { LiabilityTable } from "./LiabilityTable";
 export { PerformanceApp } from "./PerformanceApp";
 export { PerformanceChart } from "./PerformanceChart";
+export { PerformanceContent } from "./PerformanceContent";
+export { PerformanceHeader } from "./PerformanceHeader";
 export { PerformanceOverview } from "./PerformanceOverview";
 export { TimeFrameFilter } from "./TimeFrameFilter";
