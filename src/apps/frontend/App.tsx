@@ -1,8 +1,11 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { KrakenTradesHistoryApp } from "./components/KrakenTradesHistoryApp";
 import { PerformanceApp } from "./components/performance/PerformanceApp";
 import { colors } from "./styles/colors";
 import "./index.css";
+
+const queryClient = new QueryClient();
 
 type AppView = "trades" | "performance";
 
@@ -63,7 +66,11 @@ export function App() {
 			</nav>
 
 			{/* Content */}
-			<main>{renderView()}</main>
+			<main>
+				<QueryClientProvider client={queryClient}>
+					{renderView()}
+				</QueryClientProvider>
+			</main>
 		</div>
 	);
 }
