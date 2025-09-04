@@ -1,82 +1,16 @@
 import { useState } from "react";
 import { LiabilityTable } from "#/apps/frontend/components/performance/liabilities/LiabilityTable";
+import { PerformanceChart } from "#/apps/frontend/components/performance/PerformanceChart";
 import { TradeCalendar } from "#/apps/frontend/components/performance/TradeCalendar";
 import { colors } from "#/apps/frontend/styles/colors";
-import type { Trade } from "#/packages/kraken";
 import type {
 	ChartMode,
 	Liability,
 	PerformanceData,
 	TimeFrame,
-} from "../../../types/performance";
+} from "#/apps/frontend/types/performance";
+import { mockTrades } from "#/data/trades";
 import { KPIBar } from "../KPIBar";
-import { PerformanceChart } from "../PerformanceChart";
-
-// Mock trades data - in a real app, this would come from props or a hook
-const createMockTrade = (
-	time: number,
-	pair: string,
-	type: "buy" | "sell",
-	cost: string,
-	fee: string,
-	vol: string,
-	price: string,
-): Trade => ({
-	ordertxid: `mock-order-${time}`,
-	postxid: `mock-post-${time}`,
-	pair,
-	time,
-	type,
-	ordertype: "market",
-	price,
-	cost,
-	fee,
-	vol,
-	margin: "0.0",
-	leverage: "1.0",
-	misc: "",
-	ledgers: [],
-	trade_id: time,
-	maker: false,
-	poststatus: "closed",
-	cprice: parseFloat(price),
-	ccost: parseFloat(cost),
-	cfee: parseFloat(fee),
-	cvol: parseFloat(vol),
-	cmargin: 0,
-	net: (parseFloat(cost) - parseFloat(fee)) * (type === "sell" ? 1 : -1),
-	trades: [],
-});
-
-const mockTrades: Trade[] = [
-	createMockTrade(
-		Math.floor(Date.now() / 1000) - 86400, // yesterday
-		"BTCUSD",
-		"buy",
-		"50000.00",
-		"25.00",
-		"1.0",
-		"50000.00",
-	),
-	createMockTrade(
-		Math.floor(Date.now() / 1000) - 172800, // 2 days ago
-		"ETHUSD",
-		"sell",
-		"3000.00",
-		"15.00",
-		"2.0",
-		"1500.00",
-	),
-	createMockTrade(
-		Math.floor(Date.now() / 1000) - 259200, // 3 days ago
-		"ADAUSD",
-		"buy",
-		"1000.00",
-		"5.00",
-		"1000.0",
-		"1.00",
-	),
-];
 
 interface PerformanceContentProps {
 	data: PerformanceData;
