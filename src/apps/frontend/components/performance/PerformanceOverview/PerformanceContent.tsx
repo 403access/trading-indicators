@@ -151,7 +151,7 @@ export function PerformanceContent({
 			</div>
 
 			{/* Tab Content */}
-			{activeTab === "performance" ? (
+			{activeTab === "performance" && (
 				<div className="space-y-6">
 					{/* KPI Bar */}
 					<KPIBar kpis={data.kpis} />
@@ -170,9 +170,9 @@ export function PerformanceContent({
 						onLiabilityClick={onLiabilityClick}
 					/>
 				</div>
-			) : (
-				<TradeCalendar trades={mockTrades} />
 			)}
+
+			{activeTab === "calendar" && <TradeCalendar trades={mockTrades} />}
 		</div>
 	);
 }
