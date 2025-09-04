@@ -5,14 +5,14 @@
  */
 
 import {
-	getPerformanceData,
-	getPerformanceServiceInfo,
-} from "#/packages/performance-service";
-import {
 	type ApiHandler,
 	createSuccessResponse,
 	withErrorHandling,
-} from "../utils";
+} from "#/packages/api/utils";
+import {
+	getPerformanceData,
+	getPerformanceServiceInfo,
+} from "#/packages/performance-service";
 
 /**
  * GET /api/performance

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { colors } from "#/apps/frontend/styles/colors";
 import type { ApiResponse } from "#/packages/api";
 import type {
 	GetTradesHistoryRequest,
@@ -7,7 +8,6 @@ import type {
 	TradeHistory,
 } from "#/packages/kraken";
 import { mapToKeyedArray } from "#/packages/type-system/objects";
-import { colors } from "../styles/colors";
 import { usePagination } from "./common/utils/usePagination";
 import { FiltersPanel } from "./FiltersPanels";
 import { Header } from "./Header";

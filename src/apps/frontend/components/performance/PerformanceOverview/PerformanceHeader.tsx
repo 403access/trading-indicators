@@ -1,4 +1,4 @@
-import { colors } from "../../../styles/colors";
+import { colors } from "#/apps/frontend/styles/colors";
 import type { TimeFrame } from "../../../types/performance";
 import { TimeFrameFilter } from "../TimeFrameFilter";
 

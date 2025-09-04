@@ -1,5 +1,5 @@
+import { colors } from "#/apps/frontend/styles/colors";
 import type { Liability } from "#/apps/frontend/types/performance";
-import { colors } from "../../../styles/colors";
 import * as Utilities from "./LiabilityTableUtilities";
 
 export type LiabilityTableBodyProps = {

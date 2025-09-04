@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
+import { colors } from "#/apps/frontend/styles/colors";
 import type { TradeType } from "#/packages/kraken";
-import { colors } from "../styles/colors";
 import type { Query } from "./QueryType";
 
 export function FiltersPanel({

@@ -1,4 +1,4 @@
-import { colors } from "../../../styles/colors";
+import { colors } from "#/apps/frontend/styles/colors";
 
 export interface SectionProps {
 	title: string;

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { LiabilityTable } from "#/apps/frontend/components/performance/liabilities/LiabilityTable";
 import { TradeCalendar } from "#/apps/frontend/components/performance/TradeCalendar";
+import { colors } from "#/apps/frontend/styles/colors";
 import type { Trade } from "#/packages/kraken";
-import { colors } from "../../../styles/colors";
 import type {
 	ChartMode,
 	Liability,

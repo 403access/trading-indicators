@@ -1,5 +1,5 @@
+import { colors } from "#/apps/frontend/styles/colors";
 import { usePerformanceOverview } from "../../../hooks/usePerformanceOverview";
-import { colors } from "../../../styles/colors";
 import type { PerformanceData } from "../../../types/performance";
 import { LiabilityDetails } from "../liabilities/LiabilityDetails";
 import { PerformanceContent } from "./PerformanceContent";

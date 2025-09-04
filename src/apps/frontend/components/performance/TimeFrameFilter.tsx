@@ -1,5 +1,5 @@
-import { colors } from "../../styles/colors";
-import type { TimeFrame } from "../../types/performance";
+import { colors } from "#/apps/frontend/styles/colors";
+import type { TimeFrame } from "#/apps/frontend/types/performance";
 
 interface TimeFrameFilterProps {
 	selected: TimeFrame;
