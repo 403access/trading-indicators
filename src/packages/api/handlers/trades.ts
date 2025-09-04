@@ -5,6 +5,7 @@
  */
 
 import { ENV } from "#/packages/env";
+import type { TradeHistory } from "#/packages/kraken";
 import {
 	fullResyncTrades,
 	getTradesServiceInfo,
@@ -23,22 +24,20 @@ import {
  * GET /api/trades
  * Retrieve trades with optional filtering and automatic sync
  */
-const getTradesHandler = withErrorHandling(
-	async (req: Request): Promise<Response> => {
-		// Check authentication
-		const authError = requireAuth(ENV.API_KEY, ENV.API_PRIVATE_KEY);
-		if (authError) return authError;
+const getTradesHandler = withErrorHandling(async (req: Request) => {
+	// Check authentication
+	const authError = requireAuth(ENV.API_KEY, ENV.API_PRIVATE_KEY);
+	if (authError) return authError;
 
-		// Parse query parameters
-		const url = new URL(req.url);
-		const params = parseQueryParams(url);
+	// Parse query parameters
+	const url = new URL(req.url);
+	const params = parseQueryParams(url);
 
-		// Get trades from database with API sync
-		const trades = await getTradesWithSync(params);
+	// Get trades from database with API sync
+	const trades = await getTradesWithSync(params);
 
-		return createSuccessResponse(trades);
-	},
-);
+	return createSuccessResponse<TradeHistory>(trades);
+});
 
 /**
  * POST /api/trades/sync

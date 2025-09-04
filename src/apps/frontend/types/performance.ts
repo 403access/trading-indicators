@@ -19,10 +19,11 @@ export interface AmortizationEntry {
 	payment: number;
 }
 
+export type LiabilityType = "loan" | "cc" | "broker";
 export interface Liability {
 	id: string;
 	name: string;
-	type: "loan" | "cc" | "broker";
+	type: LiabilityType;
 	apr: number; // annual percentage rate
 	installmentEur: number;
 	termMonths: number;

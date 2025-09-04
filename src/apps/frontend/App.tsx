@@ -1,76 +1,50 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
-import { KrakenTradesHistoryApp } from "./components/KrakenTradesHistoryApp";
-import { PerformanceApp } from "./components/performance/PerformanceApp";
-import { colors } from "./styles/colors";
+// import { Tabs } from "#/apps/frontend/components/common/Tabs";
+import { KrakenTradesHistoryApp } from "#/apps/frontend/components/KrakenTradesHistoryApp";
+import { PerformanceApp } from "#/apps/frontend/components/performance/PerformanceApp";
+import { colors } from "#/apps/frontend/styles/colors";
 import "./index.css";
+import { type AppView, MyTabs } from "#/apps/frontend/components/common/Tabs";
 
 const queryClient = new QueryClient();
 
-type AppView = "trades" | "performance";
+export function Comp1() {
+	console.log("Comp1 rendered");
+	return <div>Component 1</div>;
+}
+
+export function Comp2() {
+	console.log("Comp2 rendered");
+	return <div>Component 2</div>;
+}
 
 export function App() {
-	const [currentView, setCurrentView] = useState<AppView>("trades");
-
-	const renderView = () => {
+	const renderView = (currentView: AppView) => {
 		switch (currentView) {
 			case "performance":
 				return <PerformanceApp />;
 			case "trades":
-			default:
 				return <KrakenTradesHistoryApp />;
+			default:
+				return <div>Not implemented yet.</div>;
 		}
 	};
 
 	return (
 		<div className="min-h-screen" style={{ background: colors.bg }}>
 			{/* Navigation */}
-			<nav
-				style={{
-					background: colors.panel,
-					borderBottom: `1px solid ${colors.line}`,
-				}}
-			>
-				<div className="max-w-7xl mx-auto px-6">
-					<div className="flex space-x-8">
-						<button
-							type="button"
-							onClick={() => setCurrentView("trades")}
-							className="py-4 px-2 border-b-2 font-medium text-sm transition-colors"
-							style={{
-								borderBottomColor:
-									currentView === "trades" ? colors.blue : "transparent",
-								color:
-									currentView === "trades" ? colors.blue : colors.textMuted,
-							}}
-						>
-							Trades History
-						</button>
-						<button
-							type="button"
-							onClick={() => setCurrentView("performance")}
-							className="py-4 px-2 border-b-2 font-medium text-sm transition-colors"
-							style={{
-								borderBottomColor:
-									currentView === "performance" ? colors.blue : "transparent",
-								color:
-									currentView === "performance"
-										? colors.blue
-										: colors.textMuted,
-							}}
-						>
-							Performance Overview
-						</button>
-					</div>
-				</div>
-			</nav>
+			{/* <Tabs<AppView> defaultView="trades" renderView={renderView} /> */}
 
 			{/* Content */}
-			<main>
+			{/* <main>
 				<QueryClientProvider client={queryClient}>
 					{renderView()}
 				</QueryClientProvider>
-			</main>
+			</main> */}
+
+			<QueryClientProvider client={queryClient}>
+				<MyTabs<AppView> defaultView="trades" />
+			</QueryClientProvider>
 		</div>
 	);
 }

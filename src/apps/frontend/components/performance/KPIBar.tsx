@@ -6,6 +6,23 @@ interface KPIBarProps {
 }
 
 export function KPIBar({ kpis }: KPIBarProps) {
+	// Early return if kpis is undefined or null
+	if (!kpis) {
+		return (
+			<div
+				style={{
+					padding: "24px",
+					textAlign: "center",
+					color: colors.textMuted,
+					backgroundColor: colors.panel,
+					borderRadius: "8px",
+					border: `1px solid ${colors.line}`,
+				}}
+			>
+				Loading performance data...
+			</div>
+		);
+	}
 	const formatCurrency = (value: number) =>
 		new Intl.NumberFormat("de-DE", {
 			style: "currency",

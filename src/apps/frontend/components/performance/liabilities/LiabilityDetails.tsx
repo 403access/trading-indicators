@@ -1,4 +1,4 @@
-import type { Liability } from "../../types/performance";
+import type { Liability } from "#/apps/frontend/types/performance";
 
 interface LiabilityDetailsProps {
 	liability: Liability;

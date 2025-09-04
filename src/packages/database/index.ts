@@ -44,6 +44,39 @@ interface SyncStateRow {
 	updated_at: number;
 }
 
+// Performance data interfaces for database
+interface BalanceRow {
+	id: number;
+	timestamp: number;
+	source_id: string;
+	liquid_eur: number;
+	frozen_eur: number;
+	interest_accrued_eur: number;
+	deposits_eur: number;
+	withdrawals_eur: number;
+	created_at: number;
+}
+
+interface LiabilityRow {
+	id: string;
+	name: string;
+	type: string;
+	apr: number;
+	installment_eur: number;
+	term_months: number;
+	start_date: number;
+	current_principal_eur: number;
+	created_at: number;
+	updated_at: number;
+}
+
+interface TaxReserveRow {
+	id: number;
+	timestamp: number;
+	reserved_eur: number;
+	created_at: number;
+}
+
 // Database file path
 const DB_PATH = "./data/trades.db";
 
@@ -108,12 +141,64 @@ const CREATE_SYNC_STATE_TABLE = `
   )
 `;
 
+// Performance data tables
+const CREATE_BALANCES_TABLE = `
+  CREATE TABLE IF NOT EXISTS balances (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp INTEGER NOT NULL,
+    source_id TEXT NOT NULL,
+    liquid_eur REAL NOT NULL,
+    frozen_eur REAL NOT NULL,
+    interest_accrued_eur REAL NOT NULL,
+    deposits_eur REAL NOT NULL,
+    withdrawals_eur REAL NOT NULL,
+    created_at INTEGER DEFAULT (unixepoch())
+  )
+`;
+
+const CREATE_LIABILITIES_TABLE = `
+  CREATE TABLE IF NOT EXISTS liabilities (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL CHECK (type IN ('loan', 'cc', 'broker')),
+    apr REAL NOT NULL,
+    installment_eur REAL NOT NULL,
+    term_months INTEGER NOT NULL,
+    start_date INTEGER NOT NULL,
+    current_principal_eur REAL NOT NULL,
+    created_at INTEGER DEFAULT (unixepoch()),
+    updated_at INTEGER DEFAULT (unixepoch())
+  )
+`;
+
+const CREATE_TAX_RESERVES_TABLE = `
+  CREATE TABLE IF NOT EXISTS tax_reserves (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp INTEGER NOT NULL,
+    reserved_eur REAL NOT NULL,
+    created_at INTEGER DEFAULT (unixepoch())
+  )
+`;
+
+const CREATE_PERFORMANCE_INDEXES = `
+  CREATE INDEX IF NOT EXISTS idx_balances_timestamp ON balances(timestamp);
+  CREATE INDEX IF NOT EXISTS idx_balances_source ON balances(source_id);
+  CREATE INDEX IF NOT EXISTS idx_tax_reserves_timestamp ON tax_reserves(timestamp);
+`;
+
 // Initialize database tables
 export function initializeDatabase() {
 	try {
+		// Create core tables
 		db.exec(CREATE_TRADES_TABLE);
 		db.exec(CREATE_TRADES_INDEX);
 		db.exec(CREATE_SYNC_STATE_TABLE);
+
+		// Create performance tables
+		db.exec(CREATE_BALANCES_TABLE);
+		db.exec(CREATE_LIABILITIES_TABLE);
+		db.exec(CREATE_TAX_RESERVES_TABLE);
+		db.exec(CREATE_PERFORMANCE_INDEXES);
 
 		// Initialize sync state if it doesn't exist
 		const syncState = db.prepare("SELECT * FROM sync_state WHERE id = 1").get();
@@ -356,4 +441,174 @@ export function getDatabaseStats() {
 		newestTradeTime: newestTrade.newest,
 		syncState,
 	};
+}
+
+// Performance data functions
+import type {
+	Balance,
+	Liability,
+	TaxReserve,
+} from "#/apps/frontend/types/performance";
+
+/**
+ * Insert or update balance record
+ */
+export function upsertBalance(balance: Omit<Balance, "t"> & { t: number }) {
+	const stmt = db.prepare(`
+		INSERT OR REPLACE INTO balances (
+			timestamp, source_id, liquid_eur, frozen_eur, 
+			interest_accrued_eur, deposits_eur, withdrawals_eur
+		) VALUES (?, ?, ?, ?, ?, ?, ?)
+	`);
+
+	stmt.run(
+		balance.t,
+		balance.sourceId,
+		balance.liquidEur,
+		balance.frozenEur,
+		balance.interestAccruedEur,
+		balance.depositsEur,
+		balance.withdrawalsEur,
+	);
+}
+
+/**
+ * Get balances with optional filtering
+ */
+export function getBalances(
+	options: {
+		sourceId?: string;
+		startTime?: number;
+		endTime?: number;
+		limit?: number;
+	} = {},
+): Balance[] {
+	const { sourceId, startTime, endTime, limit = 100 } = options;
+
+	let whereClause = "WHERE 1=1";
+	const params: (string | number)[] = [];
+
+	if (sourceId) {
+		whereClause += " AND source_id = ?";
+		params.push(sourceId);
+	}
+
+	if (startTime) {
+		whereClause += " AND timestamp >= ?";
+		params.push(startTime);
+	}
+
+	if (endTime) {
+		whereClause += " AND timestamp <= ?";
+		params.push(endTime);
+	}
+
+	const stmt = db.prepare(`
+		SELECT * FROM balances 
+		${whereClause}
+		ORDER BY timestamp DESC
+		LIMIT ?
+	`);
+
+	const rows = stmt.all(...params, limit) as BalanceRow[];
+
+	return rows.map((row) => ({
+		t: row.timestamp,
+		sourceId: row.source_id,
+		liquidEur: row.liquid_eur,
+		frozenEur: row.frozen_eur,
+		interestAccruedEur: row.interest_accrued_eur,
+		depositsEur: row.deposits_eur,
+		withdrawalsEur: row.withdrawals_eur,
+	}));
+}
+
+/**
+ * Insert or update liability
+ */
+export function upsertLiability(liability: Liability) {
+	const stmt = db.prepare(`
+		INSERT OR REPLACE INTO liabilities (
+			id, name, type, apr, installment_eur, term_months,
+			start_date, current_principal_eur, updated_at
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, unixepoch())
+	`);
+
+	stmt.run(
+		liability.id,
+		liability.name,
+		liability.type,
+		liability.apr,
+		liability.installmentEur,
+		liability.termMonths,
+		liability.startDate,
+		liability.currentPrincipalEur,
+	);
+}
+
+/**
+ * Get all liabilities
+ */
+export function getLiabilities(): Liability[] {
+	const stmt = db.prepare("SELECT * FROM liabilities ORDER BY name");
+	const rows = stmt.all() as LiabilityRow[];
+
+	return rows.map((row) => ({
+		id: row.id,
+		name: row.name,
+		type: row.type as "loan" | "cc" | "broker",
+		apr: row.apr,
+		installmentEur: row.installment_eur,
+		termMonths: row.term_months,
+		startDate: row.start_date,
+		currentPrincipalEur: row.current_principal_eur,
+	}));
+}
+
+/**
+ * Insert tax reserve record
+ */
+export function insertTaxReserve(taxReserve: TaxReserve) {
+	const stmt = db.prepare(`
+		INSERT INTO tax_reserves (timestamp, reserved_eur) 
+		VALUES (?, ?)
+	`);
+
+	stmt.run(taxReserve.t, taxReserve.reservedEur);
+}
+
+/**
+ * Get tax reserves with optional time filtering
+ */
+export function getTaxReserves(
+	options: { startTime?: number; endTime?: number; limit?: number } = {},
+): TaxReserve[] {
+	const { startTime, endTime, limit = 100 } = options;
+
+	let whereClause = "WHERE 1=1";
+	const params: number[] = [];
+
+	if (startTime) {
+		whereClause += " AND timestamp >= ?";
+		params.push(startTime);
+	}
+
+	if (endTime) {
+		whereClause += " AND timestamp <= ?";
+		params.push(endTime);
+	}
+
+	const stmt = db.prepare(`
+		SELECT * FROM tax_reserves 
+		${whereClause}
+		ORDER BY timestamp DESC
+		LIMIT ?
+	`);
+
+	const rows = stmt.all(...params, limit) as TaxReserveRow[];
+
+	return rows.map((row) => ({
+		t: row.timestamp,
+		reservedEur: row.reserved_eur,
+	}));
 }

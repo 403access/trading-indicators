@@ -1,7 +1,7 @@
-import { usePerformanceOverview } from "../../hooks/usePerformanceOverview";
-import { colors } from "../../styles/colors";
-import type { PerformanceData } from "../../types/performance";
-import { LiabilityDetails } from "./LiabilityDetails";
+import { usePerformanceOverview } from "../../../hooks/usePerformanceOverview";
+import { colors } from "../../../styles/colors";
+import type { PerformanceData } from "../../../types/performance";
+import { LiabilityDetails } from "../liabilities/LiabilityDetails";
 import { PerformanceContent } from "./PerformanceContent";
 import { PerformanceHeader } from "./PerformanceHeader";
 

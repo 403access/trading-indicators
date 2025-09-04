@@ -18,7 +18,7 @@ export interface ApiError {
 /**
  * Create a standardized API success response
  */
-export function createSuccessResponse<T>(data: T): Response {
+export function createSuccessResponse<T>(data: T) {
 	const response: ApiResponse<T> = {
 		error: [],
 		result: data,

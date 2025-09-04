@@ -1,45 +1,81 @@
 import { useState } from "react";
-import { colors } from "../../styles/colors";
+import { LiabilityTable } from "#/apps/frontend/components/performance/liabilities/LiabilityTable";
+import { TradeCalendar } from "#/apps/frontend/components/performance/TradeCalendar";
+import type { Trade } from "#/packages/kraken";
+import { colors } from "../../../styles/colors";
 import type {
 	ChartMode,
 	Liability,
 	PerformanceData,
 	TimeFrame,
-} from "../../types/performance";
-import { KPIBar } from "./KPIBar";
-import { LiabilityTable } from "./LiabilityTable";
-import { PerformanceChart } from "./PerformanceChart";
-import { TradeCalendar } from "./TradeCalendar";
+} from "../../../types/performance";
+import { KPIBar } from "../KPIBar";
+import { PerformanceChart } from "../PerformanceChart";
 
 // Mock trades data - in a real app, this would come from props or a hook
-const mockTrades = [
-	{
-		time: Math.floor(Date.now() / 1000) - 86400, // yesterday
-		pair: "BTCUSD",
-		type: "buy",
-		cost: "50000.00",
-		fee: "25.00",
-		vol: "1.0",
-		price: "50000.00",
-	},
-	{
-		time: Math.floor(Date.now() / 1000) - 172800, // 2 days ago
-		pair: "ETHUSD",
-		type: "sell",
-		cost: "3000.00",
-		fee: "15.00",
-		vol: "2.0",
-		price: "1500.00",
-	},
-	{
-		time: Math.floor(Date.now() / 1000) - 259200, // 3 days ago
-		pair: "ADAUSD",
-		type: "buy",
-		cost: "1000.00",
-		fee: "5.00",
-		vol: "1000.0",
-		price: "1.00",
-	},
+const createMockTrade = (
+	time: number,
+	pair: string,
+	type: "buy" | "sell",
+	cost: string,
+	fee: string,
+	vol: string,
+	price: string,
+): Trade => ({
+	ordertxid: `mock-order-${time}`,
+	postxid: `mock-post-${time}`,
+	pair,
+	time,
+	type,
+	ordertype: "market",
+	price,
+	cost,
+	fee,
+	vol,
+	margin: "0.0",
+	leverage: "1.0",
+	misc: "",
+	ledgers: [],
+	trade_id: time,
+	maker: false,
+	poststatus: "closed",
+	cprice: parseFloat(price),
+	ccost: parseFloat(cost),
+	cfee: parseFloat(fee),
+	cvol: parseFloat(vol),
+	cmargin: 0,
+	net: (parseFloat(cost) - parseFloat(fee)) * (type === "sell" ? 1 : -1),
+	trades: [],
+});
+
+const mockTrades: Trade[] = [
+	createMockTrade(
+		Math.floor(Date.now() / 1000) - 86400, // yesterday
+		"BTCUSD",
+		"buy",
+		"50000.00",
+		"25.00",
+		"1.0",
+		"50000.00",
+	),
+	createMockTrade(
+		Math.floor(Date.now() / 1000) - 172800, // 2 days ago
+		"ETHUSD",
+		"sell",
+		"3000.00",
+		"15.00",
+		"2.0",
+		"1500.00",
+	),
+	createMockTrade(
+		Math.floor(Date.now() / 1000) - 259200, // 3 days ago
+		"ADAUSD",
+		"buy",
+		"1000.00",
+		"5.00",
+		"1000.0",
+		"1.00",
+	),
 ];
 
 interface PerformanceContentProps {

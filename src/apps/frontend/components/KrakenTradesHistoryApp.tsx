@@ -1,11 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import type { ApiResponse } from "#/packages/api";
 import type {
 	GetTradesHistoryRequest,
 	Trade,
 	TradeHistory,
 } from "#/packages/kraken";
+import { mapToKeyedArray } from "#/packages/type-system/objects";
 import { colors } from "../styles/colors";
-import { DetailsDrawer } from "./DetailsDrawer";
+import { usePagination } from "./common/utils/usePagination";
 import { FiltersPanel } from "./FiltersPanels";
 import { Header } from "./Header";
 import { JSONInspector } from "./JSONInspector";
@@ -13,99 +16,71 @@ import { Overlay } from "./Overlay";
 import { SummaryBar } from "./SummaryBar";
 import { Toolbar } from "./Toolbar";
 import { TradesTable } from "./TradesTable";
+import { TradeDetailsDrawer } from "./trading/TradeDetailsDrawer/TradeDetailsDrawer";
+
+export const fetchApi = <T,>(url: string): Promise<ApiResponse<T>> =>
+	fetch(url).then((response) => response.json());
+
+export const fetchTradeHistory = (): Promise<ApiResponse<TradeHistory>> =>
+	fetchApi<TradeHistory>("/api/trades");
+
+export const selectApiResult = <T, R>(
+	data: ApiResponse<T>,
+	mapper?: (data: T) => R,
+): R | T => {
+	if (data.error.length > 0) {
+		throw new Error(data.error.join(" | "));
+	}
+
+	if (data.result === null) throw new Error("No result data from API");
+
+	return mapper ? mapper(data.result) : data.result;
+};
+
+export const selectQuery = (data: ApiResponse<TradeHistory>) => {
+	if (data.error.length > 0) {
+		throw new Error(data.error.join(" | "));
+	}
+
+	if (data.result === null) throw new Error("No result data from API");
+
+	return mapToKeyedArray(data.result.trades, "trade");
+};
 
 export function KrakenTradesHistoryApp() {
 	const [query, setQuery] = useState<GetTradesHistoryRequest>({
 		nonce: Date.now(),
 	});
-	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState<TradeHistory | null>(null);
-	const [error, setError] = useState<string | null>(null);
+
+	const {
+		isPending,
+		isLoading,
+		error: errorTanstack,
+		data: dataTanstack,
+	} = useQuery({
+		queryKey: ["repoData"],
+		queryFn: fetchTradeHistory,
+		select: selectQuery,
+	});
+
+	const pagination = usePagination({
+		defaultPage: 1,
+		defaultPageSize: 20,
+		itemCount: dataTanstack?.length ?? 0,
+	});
+
+	console.log("Pagination:", JSON.stringify(pagination));
+
 	const [selected, setSelected] = useState<{ id: string; trade: Trade } | null>(
 		null,
 	);
-	const pageSize = 50;
 
-	console.log("Error:", error);
+	console.log("Pending:", isPending);
+	console.log("Tanstack Error:", errorTanstack);
+	console.log("Tanstack Data:", dataTanstack);
 
-	// pull data
-	useEffect(() => {
-		let cancelled = false;
-		(async () => {
-			setLoading(true);
-			setError(null);
-			try {
-				// const res = await fetcher(query);
-
-				// fetch /api/trades
-				const response = await fetch("/api/trades");
-				const res = await response.json();
-				console.log("Response:", res);
-				if (res.error.length > 0) {
-					throw new Error(JSON.stringify(res.error));
-				}
-
-				console.log("Response:", res);
-				if (res.error.length > 0) {
-					throw new Error(JSON.stringify(res.error));
-				}
-				if (!cancelled) {
-					if (res.error?.length) setError(res.error.join(" | "));
-					setData(res.result ?? null);
-				}
-			} catch (e: any) {
-				if (!cancelled) setError(e?.message ?? "Unknown error");
-			} finally {
-				if (!cancelled) setLoading(false);
-			}
-		})();
-		return () => {
-			cancelled = true;
-		};
-	}, [query]);
-
-	// const items = useMemo(() => {
-	//     const arr: { id: string; trade: Trade }[] = [];
-	//     if (!data?.trades) return arr;
-	//     for (const [id, t] of Object.entries(data.trades)) {
-	//         arr.push({ id, trade: t });
-	//     }
-	//     // local filters (pair + orderType), Kraken covers others server-side
-	//     return arr
-	//         .filter((x) =>
-	//             query.pair
-	//                 ? x.trade.pair.toLowerCase().includes(query.pair.toLowerCase())
-	//                 : true,
-	//         )
-	//         .filter((x) =>
-	//             query.orderType === "all" ? true : x.trade.type === query.orderType,
-	//         )
-	//         .sort((a, b) => b.trade.time - a.trade.time);
-	// }, [data, query.pair, query.orderType]);
-
-	const items = useMemo(() => {
-		const arr: { id: string; trade: Trade }[] = [];
-		if (!data?.trades) return arr;
-		for (const [id, t] of Object.entries(data.trades)) {
-			arr.push({ id, trade: t });
-		}
-		return arr;
-	}, [data]);
-
-	const total = data?.count ?? 0;
-	const page = Math.floor((query.ofs ?? 0) / pageSize) + 1;
-	const totalPages = Math.max(1, Math.ceil(total / pageSize));
-
-	const onPrev = () => {
-		setQuery((q) => ({ ...q, ofs: Math.max(0, q.ofs - pageSize) }));
-	};
-
-	const onNext = () => {
-		setQuery((q) => ({
-			...q,
-			ofs: Math.min((totalPages - 1) * pageSize, q.ofs + pageSize),
-		}));
-	};
+	const onPrev = () => pagination.prevPage();
+	const onNext = () => pagination.nextPage();
 
 	return (
 		<div
@@ -122,11 +97,11 @@ export function KrakenTradesHistoryApp() {
 					}}
 				>
 					<FiltersPanel query={query} setQuery={setQuery} />
-					<JSONInspector data={data} />
+					<JSONInspector data={dataTanstack} />
 				</aside>
 
 				<main className="col-span-12 lg:col-span-9 space-y-3">
-					<SummaryBar items={items} />
+					{dataTanstack && <SummaryBar items={dataTanstack} />}
 
 					<div
 						className="rounded-xl overflow-hidden"
@@ -136,31 +111,33 @@ export function KrakenTradesHistoryApp() {
 						}}
 					>
 						<Toolbar
-							loading={loading}
-							page={page}
-							totalPages={totalPages}
+							loading={isLoading}
+							page={pagination.currentPage}
+							totalPages={pagination.totalPages}
 							onPrev={onPrev}
 							onNext={onNext}
 							onRefresh={() => setQuery((q) => ({ ...q }))}
 						/>
-						<TradesTable
-							items={items}
-							loading={loading}
-							onSelect={(row) => setSelected(row)}
-						/>
+						{dataTanstack && (
+							<TradesTable
+								items={dataTanstack}
+								loading={isLoading}
+								onSelect={(row) => setSelected(row)}
+							/>
+						)}
 					</div>
 				</main>
 			</div>
 
 			{/* Details Drawer */}
-			<DetailsDrawer
+			<TradeDetailsDrawer
 				open={!!selected}
 				onClose={() => setSelected(null)}
 				selected={selected}
 			/>
 
 			{/* Error toast */}
-			{error && <Overlay text={error} />}
+			{errorTanstack && <Overlay text={JSON.stringify(errorTanstack)} />}
 		</div>
 	);
 }

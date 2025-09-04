@@ -1,6 +1,10 @@
 import { useMemo } from "react";
-import { colors } from "../../styles/colors";
-import type { Balance, ChartMode, TimeFrame } from "../../types/performance";
+import { colors } from "#/apps/frontend/styles/colors";
+import type {
+	Balance,
+	ChartMode,
+	TimeFrame,
+} from "#/apps/frontend/types/performance";
 
 interface PerformanceChartProps {
 	balances: Balance[];
@@ -16,6 +20,11 @@ export function PerformanceChart({
 	onModeChange,
 }: PerformanceChartProps) {
 	const chartData = useMemo(() => {
+		// Return empty data if balances is undefined or null
+		if (!balances || !Array.isArray(balances)) {
+			return [];
+		}
+
 		// Filter data based on timeFrame
 		const now = Date.now();
 		const timeRanges = {

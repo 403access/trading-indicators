@@ -267,10 +267,12 @@ export const getTradesHistory = async (params: GetTradesHistoryRequest) => {
 	const url = buildUrl(GET_TRADES_HISTORY_URL);
 	console.log("URL with query:", url);
 
-	const nonce = Date.now().toString();
-	console.log("Nonce:", nonce);
+	// Use a fresh nonce and update the params
+	const freshNonce = Date.now();
+	const updatedParams = { ...params, nonce: freshNonce };
+	console.log("Nonce:", freshNonce);
 
-	const body = JSON.stringify(params);
+	const body = JSON.stringify(updatedParams);
 	console.log("Request body:", body);
 
 	const apiSignature = getKrakenSignature(relativeUrl, body, apiPrivateKey);
