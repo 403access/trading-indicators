@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ChartMode, Liability, TimeFrame } from "../types/performance";
 
-interface UsePerformanceOverviewState {
+export interface UsePerformanceOverviewState {
 	timeFrame: TimeFrame;
 	chartMode: ChartMode;
 	selectedLiability: Liability | null;

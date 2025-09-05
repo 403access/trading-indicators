@@ -1,7 +1,7 @@
 import { colors } from "#/apps/frontend/styles/colors";
 import { usePerformanceOverview } from "../../../hooks/usePerformanceOverview";
 import type { PerformanceData } from "../../../types/performance";
-import { LiabilityDetails } from "../liabilities/LiabilityDetails";
+import { LiabilityDetailsDrawer } from "../liabilities/LiabilityDetailsDrawer";
 import { PerformanceContent } from "./PerformanceContent";
 import { PerformanceHeader } from "./PerformanceHeader";
 
@@ -37,14 +37,16 @@ export function PerformanceOverview({ data }: PerformanceOverviewProps) {
 					onChartModeChange={setChartMode}
 					onLiabilityClick={handleLiabilityClick}
 				/>
-
-				{/* Selected Liability Details */}
-				{selectedLiability && (
-					<LiabilityDetails
-						liability={selectedLiability}
-						onClose={clearSelectedLiability}
-					/>
-				)}
+				{/* Drawers */}
+				<LiabilityDetailsDrawer
+					open={selectedLiability !== null}
+					onClose={clearSelectedLiability}
+					selected={
+						selectedLiability
+							? { id: selectedLiability.id, liability: selectedLiability }
+							: null
+					}
+				/>
 			</div>
 		</div>
 	);
