@@ -27,18 +27,15 @@ export function DetailsDrawerHeader({
 export interface DetailsDrawerProps<T> {
 	open: boolean;
 	onClose: () => void;
-	selected: { id: string; item: T } | null;
 	title: string;
 }
 export function DetailsDrawer<T>({
 	open,
 	onClose,
-	selected,
 	children,
 	title,
 }: React.PropsWithChildren<DetailsDrawerProps<T>>) {
-	if (!open || !selected) return null;
-	const { id, item } = selected;
+	if (!open) return null;
 	return (
 		<div className="fixed inset-0 z-20">
 			<div
@@ -56,24 +53,6 @@ export function DetailsDrawer<T>({
 				<DetailsDrawerHeader title={title} onClose={onClose} />
 
 				{children}
-
-				<section className="mt-6">
-					<h4
-						className="text-sm font-semibold mb-2"
-						style={{ color: colors.text }}
-					>
-						Raw JSON
-					</h4>
-					<pre
-						className="text-xs p-3 rounded-lg overflow-auto"
-						style={{
-							background: colors.sidebar,
-							border: `1px solid ${colors.line}`,
-						}}
-					>
-						{JSON.stringify(item, null, 2)}
-					</pre>
-				</section>
 			</div>
 		</div>
 	);

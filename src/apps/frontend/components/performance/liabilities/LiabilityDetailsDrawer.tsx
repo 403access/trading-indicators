@@ -1,4 +1,5 @@
 import { DetailsDrawer } from "#/apps/frontend/components/common/DetailsDrawer";
+import { DebugJSON } from "#/apps/frontend/components/debug/DebugJSON";
 import type { Liability } from "#/apps/frontend/types/performance";
 import { LiabilityDetails } from "./LiabilityDetails";
 
@@ -19,10 +20,11 @@ export function LiabilityDetailsDrawer({
 		<DetailsDrawer<Liability>
 			open={open}
 			onClose={onClose}
-			selected={{ ...selected, item: liability }}
 			title={`Details: ${liability.name}`}
 		>
 			<LiabilityDetails liability={liability} onClose={onClose} />
+
+			<DebugJSON data={liability} />
 		</DetailsDrawer>
 	);
 }

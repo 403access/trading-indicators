@@ -24,6 +24,7 @@ export interface Liability {
 	id: string;
 	name: string;
 	type: LiabilityType;
+	amount: number;
 	apr: number; // annual percentage rate
 	installmentEur: number;
 	termMonths: number;

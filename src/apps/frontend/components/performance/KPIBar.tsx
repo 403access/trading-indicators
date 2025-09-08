@@ -1,5 +1,5 @@
 import { colors } from "#/apps/frontend/styles/colors";
-import type { PerformanceKPIs } from "../../types/performance";
+import type { PerformanceKPIs } from "#/apps/frontend/types/performance";
 
 interface KPIBarProps {
 	kpis: PerformanceKPIs;

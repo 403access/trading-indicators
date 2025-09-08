@@ -33,7 +33,6 @@ export function TradeCalendarDrawer({
 		<DetailsDrawer<Trade>
 			open={open}
 			onClose={onClose}
-			selected={{ ...selected, item: trade }}
 			title={`Trading Activity ${selectedDate.toLocaleDateString()}`}
 		>
 			<Calendar.DayDetails

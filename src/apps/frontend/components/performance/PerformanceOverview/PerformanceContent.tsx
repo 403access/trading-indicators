@@ -18,6 +18,7 @@ interface PerformanceContentProps {
 	chartMode: ChartMode;
 	onChartModeChange: (mode: ChartMode) => void;
 	onLiabilityClick: (liability: Liability) => void;
+	onRequestAddLiability: () => void;
 }
 
 export function PerformanceContent({
@@ -26,6 +27,7 @@ export function PerformanceContent({
 	chartMode,
 	onChartModeChange,
 	onLiabilityClick,
+	onRequestAddLiability,
 }: PerformanceContentProps) {
 	const [activeTab, setActiveTab] = useState<"performance" | "calendar">(
 		"performance",
@@ -102,6 +104,7 @@ export function PerformanceContent({
 					<LiabilityTable
 						liabilities={data.liabilities}
 						onLiabilityClick={onLiabilityClick}
+						onRequestAddLiability={onRequestAddLiability}
 					/>
 				</div>
 			)}

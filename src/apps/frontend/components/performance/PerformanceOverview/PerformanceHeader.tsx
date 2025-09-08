@@ -1,6 +1,6 @@
+import { TimeFrameFilter } from "#/apps/frontend/components/performance/TimeFrameFilter";
 import { colors } from "#/apps/frontend/styles/colors";
-import type { TimeFrame } from "../../../types/performance";
-import { TimeFrameFilter } from "../TimeFrameFilter";
+import type { TimeFrame } from "#/apps/frontend/types/performance";
 
 interface PerformanceHeaderProps {
 	timeFrame: TimeFrame;

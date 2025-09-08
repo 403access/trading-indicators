@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { colors } from "#/apps/frontend/styles/colors";
+import type { PerformanceData } from "#/apps/frontend/types/performance";
 import { usePerformanceOverview } from "../../../hooks/usePerformanceOverview";
-import type { PerformanceData } from "../../../types/performance";
+import { LiabilityAddDrawer } from "../liabilities/LiabilityAddDrawer";
 import { LiabilityDetailsDrawer } from "../liabilities/LiabilityDetailsDrawer";
 import { PerformanceContent } from "./PerformanceContent";
 import { PerformanceHeader } from "./PerformanceHeader";
@@ -10,6 +12,8 @@ interface PerformanceOverviewProps {
 }
 
 export function PerformanceOverview({ data }: PerformanceOverviewProps) {
+	const [openAddLiability, setOpenAddLiability] = useState(false);
+
 	const {
 		timeFrame,
 		chartMode,
@@ -36,6 +40,7 @@ export function PerformanceOverview({ data }: PerformanceOverviewProps) {
 					chartMode={chartMode}
 					onChartModeChange={setChartMode}
 					onLiabilityClick={handleLiabilityClick}
+					onRequestAddLiability={() => setOpenAddLiability(true)}
 				/>
 				{/* Drawers */}
 				<LiabilityDetailsDrawer
@@ -46,6 +51,12 @@ export function PerformanceOverview({ data }: PerformanceOverviewProps) {
 							? { id: selectedLiability.id, liability: selectedLiability }
 							: null
 					}
+				/>
+
+				{/* Add Liability Drawer */}
+				<LiabilityAddDrawer
+					open={openAddLiability}
+					onClose={() => setOpenAddLiability(false)}
 				/>
 			</div>
 		</div>

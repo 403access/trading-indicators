@@ -7,11 +7,13 @@ import { LiabilityTableHeader } from "./LiabilityTableHeader";
 export interface LiabilityTableProps {
 	liabilities: Liability[];
 	onLiabilityClick: (liability: Liability) => void;
+	onRequestAddLiability: () => void;
 }
 
 export function LiabilityTable({
 	liabilities,
 	onLiabilityClick,
+	onRequestAddLiability,
 }: LiabilityTableProps) {
 	// TODO: Loading indicator should be moved up in tree to the parent component.
 	// Early return if liabilities is undefined or null
@@ -33,7 +35,7 @@ export function LiabilityTable({
 	// }
 
 	return (
-		<Section title="Verbindlichkeiten">
+		<Section title="Verbindlichkeiten" onRequestAdd={onRequestAddLiability}>
 			<table className="w-full">
 				<LiabilityTableHeader />
 				<LiabilityTableBody

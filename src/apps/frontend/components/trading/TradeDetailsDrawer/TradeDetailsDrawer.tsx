@@ -18,13 +18,10 @@ export function TradeDetailsDrawer({
 	if (!open || !selected) return null;
 	const { id, trade } = selected;
 
+	const title = `Trade #${id}`;
+
 	return (
-		<DetailsDrawer<Trade>
-			open={open}
-			onClose={onClose}
-			selected={{ ...selected, item: trade }}
-			title={`Trade #${id}`}
-		>
+		<DetailsDrawer<Trade> open={open} onClose={onClose} title={title}>
 			<div className="mt-4 grid grid-cols-2 gap-3">
 				<Field label="Time" value={fmt.date(trade.time)} />
 				<Field label="Pair" value={trade.pair} />
