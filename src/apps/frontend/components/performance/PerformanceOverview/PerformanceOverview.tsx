@@ -44,6 +44,20 @@ export function PerformanceOverview({ data }: PerformanceOverviewProps) {
 		}
 	};
 
+	const onDelete = async (id: string) => {
+		try {
+			const res = await fetch(`/api/liabilities/${id}`, {
+				method: "DELETE",
+			});
+			if (!res.ok) throw new Error("Failed to delete liability");
+			const data = await res.json();
+			console.log("Liability deleted:", data);
+			clearSelectedLiability();
+		} catch (err) {
+			console.error("Error deleting liability:", err);
+		}
+	};
+
 	return (
 		<div className="min-h-screen p-6" style={{ background: colors.bg }}>
 			<div className="max-w-7xl mx-auto space-y-6">
@@ -71,6 +85,7 @@ export function PerformanceOverview({ data }: PerformanceOverviewProps) {
 							? { id: selectedLiability.id, liability: selectedLiability }
 							: null
 					}
+					onDelete={onDelete}
 				/>
 
 				{/* Add Liability Drawer */}

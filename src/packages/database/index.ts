@@ -590,6 +590,14 @@ export function getLiabilities(): Liability[] {
 }
 
 /**
+ * Delete a liability by id
+ */
+export function deleteLiability(id: string) {
+	const stmt = db.prepare("DELETE FROM liabilities WHERE id = ?");
+	stmt.run(id);
+}
+
+/**
  * Insert tax reserve record
  */
 export function insertTaxReserve(taxReserve: TaxReserve) {

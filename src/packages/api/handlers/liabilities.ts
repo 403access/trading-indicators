@@ -4,7 +4,30 @@ import {
 	createSuccessResponse,
 	withErrorHandling,
 } from "#/packages/api/utils";
-import { upsertLiability, upsertLiabilityWithoutId } from "#/packages/database";
+import {
+	deleteLiability,
+	upsertLiability,
+	upsertLiabilityWithoutId,
+} from "#/packages/database";
+
+/**
+ * DELETE /api/liabilities/:id
+ * Delete a liability by id
+ */
+const deleteLiabilityHandler = withErrorHandling(
+	async (req: Request): Promise<Response> => {
+		const url = new URL(req.url);
+		const id = url.pathname.split("/").pop();
+		if (!id) {
+			return new Response(JSON.stringify({ error: "Missing liability id" }), {
+				status: 400,
+				headers: { "Content-Type": "application/json" },
+			});
+		}
+		deleteLiability(id);
+		return createSuccessResponse({ deleted: id });
+	},
+);
 
 /**
  * POST /api/liabilities
@@ -49,5 +72,8 @@ const postLiabilityHandler = withErrorHandling(
 export const liabilitiesHandlers: Record<string, ApiHandler> = {
 	"/api/liabilities": {
 		POST: postLiabilityHandler,
+	},
+	"/api/liabilities/:id": {
+		DELETE: deleteLiabilityHandler,
 	},
 };
