@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { KrakenTradesHistoryApp } from "#/apps/frontend/components/KrakenTradesHistoryApp";
 import { PerformanceApp } from "#/apps/frontend/components/performance/PerformanceApp";
 import { CalendarPage } from "#/apps/frontend/pages/CalendarPage";
+import { KrakenTradesHistoryApp } from "#/apps/frontend/pages/KrakenTradesHistoryPage";
 import { TaxesPage } from "#/apps/frontend/pages/TaxesPage.tsx/TaxesPage";
 import { colors } from "#/apps/frontend/styles/colors";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "#/components/ui/tabs";
 
-export type AppView = "trades" | "performance" | "taxes";
+export type AppView = "trades" | "performance" | "taxes" | "calendar";
 
 export type TabsProps<T> = {
 	defaultView: T;
@@ -16,12 +16,12 @@ const TABS = [
 	{
 		value: "trades",
 		label: "Trades History",
-		render: () => <PerformanceApp />,
+		render: () => <KrakenTradesHistoryApp />,
 	},
 	{
 		value: "performance",
 		label: "Performance Overview",
-		render: () => <KrakenTradesHistoryApp />,
+		render: () => <PerformanceApp />,
 	},
 	{
 		value: "taxes",
@@ -44,7 +44,7 @@ export const MyTabs = <AppView,>({ defaultView }: TabsProps<AppView>) => {
 
 	return (
 		<Tabs
-			className="mx-auto space-x-8"
+			className="mx-auto space-x-8 gap-0"
 			style={{
 				background: colors.panel,
 				borderBottom: `1px solid ${colors.line}`,
@@ -80,16 +80,7 @@ export const MyTabs = <AppView,>({ defaultView }: TabsProps<AppView>) => {
 				))}
 			</TabsList>
 			{TABS.map((tab) => (
-				<TabsContent
-					key={tab.value}
-					className="py-4 px-2 border-b-1 font-medium text-sm transition-colors"
-					value={tab.value}
-					style={{
-						borderBottomColor:
-							currentView === tab.value ? colors.blue : colors.line,
-						color: currentView === tab.value ? colors.blue : colors.textMuted,
-					}}
-				>
+				<TabsContent key={tab.value} className="m-0" value={tab.value}>
 					{tab.render()}
 				</TabsContent>
 			))}

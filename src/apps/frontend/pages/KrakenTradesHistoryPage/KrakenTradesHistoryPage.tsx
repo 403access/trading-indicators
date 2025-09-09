@@ -8,15 +8,15 @@ import type {
 	TradeHistory,
 } from "#/packages/kraken";
 import { mapToKeyedArray } from "#/packages/type-system/objects";
-import { usePagination } from "./common/utils/usePagination";
-import { FiltersPanel } from "./FiltersPanels";
-import { Header } from "./Header";
-import { JSONInspector } from "./JSONInspector";
-import { Overlay } from "./Overlay";
-import { SummaryBar } from "./SummaryBar";
-import { Toolbar } from "./Toolbar";
-import { TradesTable } from "./TradesTable";
-import { TradeDetailsDrawer } from "./trading/TradeDetailsDrawer/TradeDetailsDrawer";
+import { usePagination } from "../../components/common/utils/usePagination";
+import { FiltersPanel } from "../../components/FiltersPanels";
+import { Header } from "../../components/Header";
+import { JSONInspector } from "../../components/JSONInspector";
+import { Overlay } from "../../components/Overlay";
+import { SummaryBar } from "../../components/SummaryBar";
+import { Toolbar } from "../../components/Toolbar";
+import { TradesTable } from "../../components/TradesTable";
+import { TradeDetailsDrawer } from "../../components/trading/TradeDetailsDrawer/TradeDetailsDrawer";
 
 export const fetchApi = <T,>(url: string): Promise<ApiResponse<T>> =>
 	fetch(url).then((response) => response.json());
