@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { colors } from "#/apps/frontend/styles/colors";
-import type { PerformanceData } from "#/apps/frontend/types/performance";
+import type {
+	Liability,
+	PerformanceData,
+} from "#/apps/frontend/types/performance";
 import { usePerformanceOverview } from "../../../hooks/usePerformanceOverview";
 import { LiabilityAddDrawer } from "../liabilities/LiabilityAddDrawer";
 import { LiabilityDetailsDrawer } from "../liabilities/LiabilityDetailsDrawer";
@@ -23,6 +26,23 @@ export function PerformanceOverview({ data }: PerformanceOverviewProps) {
 		handleLiabilityClick,
 		clearSelectedLiability,
 	} = usePerformanceOverview();
+
+	const onAddLiability = async (liability: Liability) => {
+		try {
+			const res = await fetch("/api/liabilities", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(liability),
+			});
+			if (!res.ok) throw new Error("Failed to add liability");
+			const data = await res.json();
+			console.log("Liability added:", data);
+		} catch (err) {
+			console.error("Error adding liability:", err);
+		} finally {
+			setOpenAddLiability(false);
+		}
+	};
 
 	return (
 		<div className="min-h-screen p-6" style={{ background: colors.bg }}>
@@ -57,6 +77,7 @@ export function PerformanceOverview({ data }: PerformanceOverviewProps) {
 				<LiabilityAddDrawer
 					open={openAddLiability}
 					onClose={() => setOpenAddLiability(false)}
+					onAdd={onAddLiability}
 				/>
 			</div>
 		</div>

@@ -11,7 +11,9 @@ export function DetailsDrawerHeader({
 }: DetailsDrawerHeaderProps) {
 	return (
 		<div className="flex items-center justify-between">
-			<h3 className="text-lg font-semibold">{title}</h3>
+			<h3 className="text-lg font-semibold" style={{ color: colors.text }}>
+				{title}
+			</h3>
 			<button
 				type="button"
 				className="text-sm"

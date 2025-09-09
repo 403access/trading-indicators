@@ -63,6 +63,7 @@ interface LiabilityRow {
 	type: string;
 	apr: number;
 	installment_eur: number;
+	amount: number;
 	term_months: number;
 	start_date: number;
 	current_principal_eur: number;
@@ -161,6 +162,7 @@ const CREATE_LIABILITIES_TABLE = `
     id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     type TEXT NOT NULL CHECK (type IN ('loan', 'cc', 'broker')),
+	amount REAL NOT NULL,
     apr REAL NOT NULL,
     installment_eur REAL NOT NULL,
     term_months INTEGER NOT NULL,
@@ -526,10 +528,30 @@ export function getBalances(
 /**
  * Insert or update liability
  */
+export function upsertLiabilityWithoutId(liability: Liability) {
+	const stmt = db.prepare(`
+		INSERT OR REPLACE INTO liabilities (
+			name, type, amount, apr, installment_eur, term_months,
+			start_date, current_principal_eur, updated_at
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, unixepoch())
+	`);
+
+	stmt.run(
+		liability.name,
+		liability.type,
+		liability.amount,
+		liability.apr,
+		liability.installmentEur,
+		liability.termMonths,
+		liability.startDate,
+		liability.currentPrincipalEur,
+	);
+}
+
 export function upsertLiability(liability: Liability) {
 	const stmt = db.prepare(`
 		INSERT OR REPLACE INTO liabilities (
-			id, name, type, apr, installment_eur, term_months,
+			id, name, type, amount, apr, installment_eur, term_months,
 			start_date, current_principal_eur, updated_at
 		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, unixepoch())
 	`);
@@ -538,6 +560,7 @@ export function upsertLiability(liability: Liability) {
 		liability.id,
 		liability.name,
 		liability.type,
+		liability.amount,
 		liability.apr,
 		liability.installmentEur,
 		liability.termMonths,
@@ -557,6 +580,7 @@ export function getLiabilities(): Liability[] {
 		id: row.id,
 		name: row.name,
 		type: row.type as "loan" | "cc" | "broker",
+		amount: row.amount,
 		apr: row.apr,
 		installmentEur: row.installment_eur,
 		termMonths: row.term_months,
